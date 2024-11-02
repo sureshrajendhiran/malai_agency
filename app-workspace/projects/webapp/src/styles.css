@@ -1,0 +1,88 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined");
+
+
+@import "../../../assets/css/color.css";
+@import "../../../assets/css/common.css";
+@import "../../../assets/css/responsive.css";
+@import "../../../assets/css/table.css";
+
+
+
+
+html,
+body {
+  height: 100%;
+  color: #2f3a46;
+  line-height: normal;
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif !important;
+  background-color: #deeaff40;
+}
+
+.mat-paginator {
+  background: transparent !important;
+}
+
+
+*::-webkit-scrollbar,
+*::-webkit-scrollbar-thumb {
+  width: 5px;
+  border-radius: 13px;
+  border: none;
+  color: #778ba7;
+  background-color: #d9e7f7;
+  height: 5px;
+}
+
+*:hover::-webkit-scrollbar,
+*:hover::-webkit-scrollbar-thumb {
+  color: #778ba7 !important;
+  transition: color 0s, opacity 0.5s linear;
+}
+
+*::-webkit-scrollbar-thumb {
+  box-shadow: inset 0 0 0 10px;
+}
+
+.mat-dialog-container {
+  padding: 0px !important;
+}
+
+
+button:focus {
+  outline: 0;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+}
+
+input,
+textarea {
+  border: none;
+  background-color: transparent;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+::placeholder {
+  font-size: 14px;
+  font-family: Roboto, "Helvetica Neue", sans-serif !important;
+}
+
+textarea {
+  font-family: Roboto, "Helvetica Neue", sans-serif !important;
+}
