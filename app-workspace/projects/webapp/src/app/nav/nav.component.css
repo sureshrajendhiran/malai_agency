@@ -1,0 +1,4 @@
+.nav-active {
+  background-color: var(--color-primary-opacity-10);
+  color: var(--color-primary) !important;
+}

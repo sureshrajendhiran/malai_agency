@@ -1,0 +1,30 @@
+<div class="grid grid-tem-p align-c justify-space-between pad-5-10 font-12 bg-white">
+    <div class="flex align-c head-c">
+      Rows per page :
+      <div class="bg-white border border-c border-r-4 flex align-c mar-l-10 pad-10 pointer"
+        [matMenuTriggerFor]="RowCountmenu">
+        {{getObj?.limit}}
+        <mat-icon class="icon-20 head-c mar-l-5">expand_more</mat-icon>
+      </div>
+      <mat-menu #RowCountmenu="matMenu">
+        <button mat-menu-item *ngFor="let item of limitList" class="{{item==getObj?.limit?'primary-c':'head-c'}}"
+          (click)="getObj.limit=item;changePage()">{{item}}</button>
+      </mat-menu>
+    </div>
+    <div class="flex align-c head-c">
+      <div class="mar-r-10">Showing {{(getObj?.page * getObj?.limit) +1}} to
+        {{(getObj?.page * getObj?.limit)+inputObject.dataList?.length}} out of
+        {{!!inputObject.totalCount?inputObject.totalCount:0}} entries</div>
+      <div class="bg-white border border-c border-r-4 flex align-c">
+        <div class="flex align-c justify-c pointer border-right border-c icon-40" matRipple (click)="pagination(-1)">
+          <mat-icon>chevron_left</mat-icon>
+        </div>
+        <div class="pad-10 white flex align-c justify-c mar-5 border-r-4 pointer bg-primry" matRipple
+          style="min-width: 35px;height:30px">{{getObj?.page+1}}</div>
+        <div class="flex align-c justify-c pointer border-left border-c icon-40" matRipple (click)="pagination(1)">
+          <mat-icon>chevron_right</mat-icon>
+        </div>
+      </div>
+    </div>
+  </div>
+  

@@ -1,0 +1,101 @@
+<div class="height-100 width-100">
+  <div class="auth-bg pad-d-10 flex-desk ">
+    <div class="">
+      <div class="flex align-c justify-c pos-r min-h">
+        <div class="sign-con">
+          <div class="sign-card">
+            <ng-container *ngTemplateOutlet="loginTemplate"></ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #loginTemplate>
+  <div class=" grid-40-60" style="height: 545px;">
+    <div class="pad-30 border-right border-c desk-view" style="padding:40px">
+      <div class="flex">
+        <div class="icon-40 mar-r-20">
+          <img loading="lazy" src="https://admin.malaiagency.in/assets/icons/logo-color.png"
+            class="width-100">
+        </div>
+        <div class="flex flex-d-c" style="line-height: 1.3;">
+          <div class="text-c font-18 f-w-500">MALAI AGENCY</div>
+          <div class="font-10 f-w-500">CCTV Dealer and all security systems.</div>
+        </div>
+      </div>
+      <!-- <div> -->
+      <div class="flex align-c justify-c pad-t-50 pad-b-20">
+        <img loading="lazy" src="https://app.atmavaan.com/uploads/Login_SCreen_svg_454_2024-05-16_06:26:48.svg"
+          style="height: 280px;width: 280px;">
+      </div>
+      <!-- </div> -->
+      <div class="sub-c font-12" style="width: 329px;">
+        We are one of the leading CCTV Dealer in Pondicherry, Cuddalore and surrounding areas in last 15+ years. 
+      </div>
+    </div>
+
+    <div class="pad-d-50 over-h">
+      <div class="d-f">
+        <div class="icon-40 mar-r-20">
+          <img loading="lazy" src="https://admin.malaiagency.in/assets/icons/logo-color.png"
+            class="width-100">
+        </div>
+        <div class="flex flex-d-c" style="line-height: 1.3;">
+          <div class="text-c font-18 f-w-500">MALAI AGENCY</div>
+          <div class="font-10 f-w-500">CCTV Dealer and all security systems.</div>
+        </div>
+      </div>
+    
+      <div class="mar-b-30">
+        <div class="font-18 f-w-500 pad-b-5">Log in to your Account</div>
+        <div class="sub-cc font-12">Welcome back to MALAI AGENCY!</div>
+      </div>
+      <div >
+        <form [formGroup]="loginFormGroup">
+          <div class="mar-b-20">
+            <div class="input-bc flex width-400 text-field {{!!emailErrorCallback?'shake':''}}">
+              <input type="text" placeholder=" " formControlName="email" type="email"
+                class="pad-10 text-base {{!emailErrorCallback ? 'valid' : 'invalid'}} {{loginFormGroup.get('email')?.value.length > 0 ? '':'border-n'}}">
+              <span class="{{!emailErrorCallback ? 'valid-c' : 'invalid-c'}} font-s wid-90 overflow-e email-ph"></span>
+            </div>
+            <div class="error-span mar-t-10 " *ngIf="!!emailErrorCallback">{{emailErrorCallback}}</div>
+          </div>
+    
+          <div class="mar-b-30">
+            <div
+              class="input-bc flex  width-400 text-field {{!!passwordErrorCallback ? 'shake' : ''}} {{loginFormGroup.get('password')?.value.length > 0 ? 'bg-none':''}}">
+              <div class="password-input-container width-100">
+                <input placeholder=" " formControlName="password"
+                  class="pad-10 height-100 text-base {{!passwordErrorCallback ? 'valid' : 'invalid'}} {{loginFormGroup.get('password')?.value.length > 0 ? '':'border-n'}}"
+                  type="{{passwordOpen ? 'text' : 'password'}}">
+                <span class="{{!passwordErrorCallback ? 'valid-c' : 'invalid-c'}} font-s wid-90 overflow-e pass-ph"></span>
+                <div class="visibility-icon-container pointer" (click)="passwordOpen=!passwordOpen">
+                  <div class="material-symbols-outlined icon-20">{{passwordOpen ? 'visibility' : 'visibility_off'}}</div>
+                </div>
+              </div>
+            </div>
+    
+            <div class="error-span mar-t-10" *ngIf="!!passwordErrorCallback">{{passwordErrorCallback}}</div>
+          </div>
+    
+    
+          <div class="flex align-c  mar-b-30">
+            <button mat-button class="width-100 {{!!spinner ? 'text-c' : 'white btn-bg'}}"
+              (click)="login()" [disabled]="isSubmiting">
+              <div class="flex align-c">
+                <div *ngIf="!!spinner" class="mar-r-10">
+                  <mat-spinner [diameter]="20" strokeWidth="2"></mat-spinner>
+                </div>
+                <div>{{!!spinner ? 'Verifying' : 'Log in'}}</div>
+              </div>
+            </button>
+          </div>
+        </form>
+      </div>
+    
+
+    </div>
+  </div>
+</ng-template>

@@ -1,0 +1,69 @@
+@use '@angular/material'as mat;
+// @include mat-core();
+
+$atmavaan-primary: (50: #e1f5fe,
+  100: #b3e5fc,
+  200: #81d4fa,
+  300: #4fc3f7,
+  400: #29b6f6,
+  500: #03a9f4,
+  600: #039be5,
+  700: #0288d1,
+  800: #2f639d,
+  900:#2f639d,
+  A100: #80d8ff,
+  A200: #40c4ff,
+  A400: #00b0ff,
+  A700: #00b0ff,
+  contrast: ( //need to change the contrast according   while working on themes
+    50 : #000000,
+    100 : #000000,
+    200 : #000000,
+    300 : #ffffff,
+    400 : #ffffff,
+    500 : #ffffff,
+    600 : #ffffff,
+    700 : #ffffff,
+    800 : #ffffff,
+    900 : #ffffff,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #ffffff,
+    A700 : #ffffff,
+  ));
+
+
+$my-primary: mat.define-palette($atmavaan-primary, 800);
+$my-accent: mat.define-palette(mat.$blue-palette, 800);
+$my-warn: mat.define-palette(mat.$deep-orange-palette);
+$my-success: mat.define-palette(mat.$green-palette, A700);
+$my-link: mat.define-palette(mat.$blue-palette, 600);
+
+$light-theme: mat.define-light-theme((color: (primary: $my-primary,
+      accent: $my-accent,
+      warn: $my-warn,
+    ),
+    typography: mat.define-typography-config(),
+    density: 0,
+  ));
+
+// @include mat.all-component-themes($my-theme);
+
+// Light mode
+.light-theme {
+  @include mat.all-component-themes($light-theme);
+}
+
+:root {
+  --color-primary: #{mat.get-color-from-palette($my-primary)};
+  --color-accent: #{mat.get-color-from-palette($my-accent)};
+  --color-warn: #{mat.get-color-from-palette($my-warn)};
+  --color-success: #{mat.get-color-from-palette($my-success)};
+  --color-link: #2962ff;
+  --color-bg: #fafafa;
+  --color-primary-opacity-25: #f7f9fa;
+  --color-primary-opacity-10: #{mat.get-color-from-palette($my-primary)}19;
+  --color-primary-opacity-5: #{mat.get-color-from-palette($my-primary)}40;
+  --color-head: #2f3a57f2;
+  --color-sub: #394460cc;
+}
