@@ -75,8 +75,11 @@ export class LoginComponent implements OnInit {
     } else {
       const body = <any>{};
       Object.assign(body, this.loginFormGroup.value);
+      this.spinner = true;
       this.commonApiService.login(body).subscribe((res: any) => {
         this.isSubmiting = false;
+        this.spinner = false;
+
         if (res.statusCode == 200 && !res.info.error_code) {
           if (res.info.success || (!!res.info.token && !!res.info.user_info)) {
             this.toast('Logged in Successfully');
