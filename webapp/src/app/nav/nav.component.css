@@ -72,3 +72,11 @@
     display: none;
   }
 }
+
+
+.profile-c {
+  padding: 0px 10px;
+  box-sizing: border-box;
+  border-radius: 4px;
+  margin-left: 10px;
+}

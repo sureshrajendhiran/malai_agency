@@ -14,6 +14,7 @@
   <div class="pad-5-10 flex align-c justify-space-between">
     <div class="flex align-c">
       <div class="mar-r-10 overflow-e f-w-500">{{!!getObj.filter && getObj.filter?.name?getObj.filter?.name:'All'}}
+        {{!!getObj.filter && !!getObj.filter.count?(' ('+getObj.filter.count+')'):''}}
       </div>
       <mat-button-toggle-group [(ngModel)]="getObj.static_type" (change)="changeType()">
         <mat-button-toggle value="all">All</mat-button-toggle>
@@ -27,7 +28,7 @@
       </button>
     </div>
   </div>
-  <div style="height: calc(100vh - 170px);" class="overflow-a pos-r">
+  <div style="height: calc(100vh - 160px);" class="overflow-a pos-r">
     <div *ngFor="let item of dataList" class="pad-5">
       <ng-container *ngTemplateOutlet="cardInfoItemTemplate;context:{itemInfo:item}"></ng-container>
     </div>
@@ -43,9 +44,11 @@
     </div>
     <div class="oveflow-h">
       <div class="flex align-c justify-space-between pad-5-10">
-        <div class="pad-5 font-16 flex align-c f-w-500 mar-l-10 overflow-a">
+        <div class="pad-5 font-16 flex align-c f-w-500  overflow-a">
           <div class="mar-r-10 overflow-e">{{!!getObj.filter && getObj.filter?.name?getObj.filter?.name:'All'}}
-            {{getObj.type | titlecase}}</div>
+            {{getObj.type | titlecase}}
+            {{!!getObj.filter && !!getObj.filter.count?(' ('+getObj.filter.count+')'):''}}
+          </div>
           <mat-button-toggle-group [(ngModel)]="getObj.static_type" (change)="changeType()">
             <mat-button-toggle value="all">All</mat-button-toggle>
             <mat-button-toggle value="non-tax">Non-Taxable</mat-button-toggle>
@@ -70,8 +73,9 @@
           </div>
         </div>
         <div class="pos-r pad-10 overflow-h" style="padding-left: 0px !important;">
-          <div style="height: calc(100vh - 187px); border-radius: 4px;" class="overflow-a pos-r preview-border">
+          <div style="height: calc(100vh - 185px); border-radius: 4px;" class="overflow-a pos-r preview-border">
             <div class="head-c flex align-c justify-c height-100 width-100">No Preview</div>
+            <div [innerHTML]="previewData"></div>
           </div>
         </div>
       </div>

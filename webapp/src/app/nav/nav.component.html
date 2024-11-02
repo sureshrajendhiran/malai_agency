@@ -1,9 +1,9 @@
 <div>
   <div class="desk-view">
     <div class="bg-white width-100 border-b border-c"
-      style="display: grid!important; grid-template-columns: 270px calc(100% - 420px) 150px; height: 60px; padding: 6px 10px; box-sizing: border-box;">
+      style="display: grid!important; grid-template-columns:270px calc(100% - 450px) 180px; height: 60px; padding: 6px 10px; box-sizing: border-box;">
       <div class="flex align-c">
-        <div _ class="mar-r-10 flex align-c justify-c"><img loading="lazy" height="42px" width="42px"
+        <div _ class="mar-r-10 flex align-c justify-c"><img loading="lazy" height="46px" width="46px"
             src="./../../assets/img/logo-color.png"></div>
         <div class="flex flex-d-c"><span class="font-20 f-w-500" style="color: var(--color-primary);">Malai
             Agency</span><span class="font-10 mar-t-5" style="line-height: 12px;">CCTV Dealer and all security
@@ -25,32 +25,37 @@
         </div>
       </div>
       <div class="flex align-c justify-r mar-r-10">
-        <ng-container *ngTemplateOutlet="avatorIcon"></ng-container>
+        <div class="profile-c grid algin-c grid-gap-10 align-c border-c border border-r-4 pointer"
+          style="grid-template-columns: calc(100% - 40px) 30px;" matRipple [matMenuTriggerFor]="profileMenu">
+          <div class="font-10 flex flex-d-c">
+            <div class="f-w-500 head-c font-12 overflow-e">{{userInfo?.user_name}}</div>
+            <div class="overflow-e sub-c">{{!!userInfo?.franchise?userInfo?.franchise:'Main Franchise'}}</div>
+          </div>
+          <div class="flex align-c justify-r">
+            <ng-container *ngTemplateOutlet="avatorIcon"></ng-container>
+          </div>
+        </div>
       </div>
     </div>
   </div>
   <div class="mb-view">
-    <div class="pad-lr-10 flex align-c justify-space-between bg-white border-b border-c" style="min-height: 60px;">
+    <div class="pad-lr-10 flex align-c justify-space-between bg-white border-b border-c" style="min-height: 55px;">
       <div class="width-100 flex align-c mar-l-5">
         <div class="flex align-c justify-c mar-r-10"><img loading="lazy" height="32px" width="32px"
             src="../../assets/img/logo-no-background.png"></div>
         <div class="f-w-500 primary-c font-18">Malai Agency</div>
       </div>
       <div class="flex align-c">
-        <div matripple="" class="mat-mdc-menu-trigger mat-ripple flex align-c pointer pad-5 border-r-8"
-          aria-haspopup="menu" aria-expanded="false">
-          <div class="flex align-c justify-c">
-            <ng-container *ngTemplateOutlet="avatorIcon"></ng-container>
-          </div>
+        <div class="flex align-c justify-c pointer pad-5 border-r-8 " matRipple [matMenuTriggerFor]="profileMenu">
+          <ng-container *ngTemplateOutlet="avatorIcon"></ng-container>
         </div>
-
       </div>
     </div>
   </div>
-  <div style="background: #25435a0a;" class="overflow-h" style="min-height: calc(100vh - 120px);">
+  <div style="background: #25435a0a;" class="overflow-h" style="min-height: calc(100vh - 110px);">
     <router-outlet></router-outlet>
   </div>
-  <div class="mb-view bg-white border-c border-t" style="height: 60px;">
+  <div class="mb-view bg-white border-c border-t" style="height: 55px;">
     <div class="mob-nav-g">
       <div *ngFor="let item of navList" [routerLinkActive]="'nav-active'" matRipple class=" mb-nav-btn"
         routerLink="{{item.route}}" mat-button>
@@ -63,7 +68,7 @@
 
 
 <ng-template #avatorIcon>
-  <svg xmlns=" http://www.w3.org/2000/svg" viewBox="0 0 212 212" height="32" width="32" class="ng-star-inserted">
+  <svg xmlns=" http://www.w3.org/2000/svg" viewBox="0 0 212 212" height="30" width="30" class="ng-star-inserted">
     <path fill="#DFE5E7"
       d="M106.251.5C164.653.5 212 47.846 212 106.25S164.653 212 106.25 212C47.846 212 .5 164.654.5 106.25S47.846.5 106.251.5z"
       class="background"></path>
@@ -72,3 +77,10 @@
       class="primary"></path>
   </svg>
 </ng-template>
+
+
+
+<mat-menu #profileMenu="matMenu">
+  <button mat-menu-item>Profile</button>
+  <button mat-menu-item (click)="signOut()">Sign Out</button>
+</mat-menu>
