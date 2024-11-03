@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-create-master',
@@ -6,5 +6,13 @@ import { Component } from '@angular/core';
   styleUrl: './create-master.component.css'
 })
 export class CreateMasterComponent {
+  @Input() operation: any;
+  @Input() type: any;
+  @Input() inputInfo: any;
+  @Output() closeEvent = new EventEmitter();
 
+
+  constructor(){
+    
+  }
 }

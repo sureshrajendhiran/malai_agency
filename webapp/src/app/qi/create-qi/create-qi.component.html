@@ -1,1 +1,183 @@
-<p>create-qi works!</p>
+<div class="pad-10 flex align-c justify-space-between border-c border-b">
+  <div class="head-c f-w-500 font-18 flex align-c">{{!!inputInfo?.id?'Edit':'Create'}}
+    {{type=='invoice'?'Invoice':'Quotation'}}
+    <div class="mar-lr-10">{{!!inputInfo?.id && !!inputInfo?.ref_number?inputInfo?.ref_number:''}}</div>
+  </div>
+  <div>
+    <button mat-icon-button (click)="closeEmitter.emit(false);">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+</div>
+
+<div class="pad-10 overflow-a" style="height: calc(100% - 120px);">
+
+  <div class="flex align-c justify-r pad-10">
+    <div class="mar-r-10 head-c">Date : </div>
+    <div class="input-c pos-r">
+      <input [matDatepicker]="picker" class="pad-10" (focus)="picker.open()" [(ngModel)]="body.date_t">
+      <div class="pos-a" style="right:10px;top:10px">
+        <mat-icon class="sub-c icon-18 pointer" (click)="picker.open()">calendar_today</mat-icon>
+      </div>
+      <mat-datepicker #picker></mat-datepicker>
+    </div>
+  </div>
+
+  <div class="pad-10">
+    <div class="c-flex justify-space-between align-c ">
+      <div class="">
+        <div class="mar-r-10 mar-t-10 head-c">Customer Name : </div>
+        <div class="input-c mar-t-5 pos-r">
+          <input class="pad-10 width-100" style="min-width:200px" [(ngModel)]="body.customer_name"
+            (input)="searchCustomerName($event.target)" (focus)="searchCustomerName('')"
+            [matAutocomplete]="autoCustomer">
+          <mat-autocomplete #autoCustomer="matAutocomplete" (optionSelected)="selectCusotmerInfo($event.option.value)">
+            <mat-option *ngFor="let item of customerList;" [value]="item"
+              style="line-height: normal !important;height: max-content !important;">
+              <div class="border-c border-b pad-10 pointer">
+                <div class="head-c f-w-500">{{item?.customer_name}}</div>
+                <div class="sub-c font-12">{{item?.address}}</div>
+              </div>
+
+            </mat-option>
+          </mat-autocomplete>
+          <div class="pos-a" style="right:8px;top:8px">
+            <mat-icon class="icon-20 primary-c pointer" (click)="searchDialog(searchCustomersItems,'customer');">add
+            </mat-icon>
+          </div>
+        </div>
+      </div>
+      <div class="desk-view mar-l-5"></div>
+      <div>
+        <div class="mar-r-10 mar-t-10 head-c">Customer Address : </div>
+        <div class="input-c mar-t-5">
+          <input class="pad-10 width-100" style="min-width:300px" [(ngModel)]="body.customer_address">
+        </div>
+      </div>
+
+
+      <div>
+        <div class="mar-r-10 mar-t-10 head-c">Terms & conditions on next page</div>
+        <div class="input-c mar-t-5">
+          <input class="pad-10 width-100" type="number" style="min-width:300px" [(ngModel)]="body.terms_type">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="pad-10 desk-view">
+    <div class="head-c f-w-500 font-16 mar-b-10">Item List</div>
+    <div class="overflow-a">
+      <table>
+        <tr>
+          <th class="tmp-th head-c font-12" style="width:40px;">Sl/no</th>
+          <th class="tmp-th head-c font-12">Item Name</th>
+          <th class="tmp-th head-c font-12" style="width: 100px;">HSN Code</th>
+          <th class="tmp-th head-c font-12" style="width: 10px;">Unit/Quantity</th>
+          <th class="tmp-th head-c font-12" style="width: 104px;">Rate per Item</th>
+          <th class="tmp-th head-c font-12" style="width:130px">Amount</th>
+          <th class="tmp-th" style="width:20px"></th>
+        </tr>
+        <tr *ngFor="let item of body?.item_list;index as indexAS" (hover)="selectedIndex=indexAS">
+          <td class="tmp-th head-c font-12 text-a-c">{{indexAS+1}}.</td>
+          <td class="tmp-th head-c font-12">
+            <div class="pos-r">
+              <input class="pad-10" [(ngModel)]="item.item_name" [matAutocomplete]="auto"
+                (input)="searchitemName($event.target)" (focus)="searchitemName('')">
+              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectItemName($event.option.value)">
+                <mat-option *ngFor="let item of itemList;" [value]="item"
+                  style="line-height: normal !important;height: max-content !important;">
+                  <div class="border-c border-b pad-10 pointer">
+                    <div class="head-c f-w-500 pad-b-5">{{item?.item_name}}</div>
+                    <div class="sub-c font-12">
+                      <span>Rate :</span>
+                      <span class="head-c f-w-500">{{item?.rate_per_item}} per item</span>
+                    </div>
+                  </div>
+                </mat-option>
+              </mat-autocomplete>
+              <div class="pos-a" style="top:10px;right:0px;">
+                <mat-icon class="icon-20 primary-c pointer"
+                  (click)="searchDialog(searchItems,'items');selectedIndex=indexAS;">add</mat-icon>
+              </div>
+            </div>
+          </td>
+          <td class="tmp-th head-c font-12">
+            <input class="pad-10" [(ngModel)]="item.hsn_code">
+          </td>
+          <td class="tmp-th head-c font-12">
+            <input class="pad-10 text-a-r" type="number" min="0" [(ngModel)]="item.unit" (input)="calculateTotal(item)">
+          </td>
+          <td class="tmp-th head-c font-12">
+            <input class="pad-10 text-a-r" type="number" min="0" [(ngModel)]="item.rate_per_item"
+              (input)="calculateTotal(item)">
+          </td>
+          <td class="tmp-th head-c font-14 text-a-r ">
+            {{!!item.unit && !!item.rate_per_item?(item.unit * item.rate_per_item):0}}
+          </td>
+          <td class="tmp-th ">
+            <div class="flex align-c justify-c">
+              <img src="../../../assets/img/trash.svg" class="icon-18 pointer" (click)="deleteItem(indexAS)">
+            </div>
+          </td>
+        </tr>
+      </table>
+
+    </div>
+    <div class="flex align-c justify-r head-c f-w-500 font-16 pad-10" style="padding-right: 61px;">
+      Grand Total: {{body.total}}
+    </div>
+    <div class="pad-10">
+      <button mat-raised-button color="primary" (click)="addItem(searchItems)">Add Item +</button>
+    </div>
+  </div>
+  <div class="mb-view">
+    <ng-container *ngTemplateOutlet="mobileAddList"></ng-container>
+  </div>
+</div>
+
+<ng-template #mobileAddList>
+  <div class="head-c f-w-500 font-16 mar-b-10 mar-t-10">Item List</div>
+  <div *ngFor="let rateItem of  body?.item_list;index as indexAS">
+    <div class="pad-10 border border-c border-r-4 mar-b-10">
+      <div class="flex align-c justify-space-between">
+        <div>{{rateItem.item_name}}</div>
+      </div>
+      <div class="flex align-c justify-space-between mar-t-5">
+        <div class="sub-c font-12"><span>Rate :</span><span class="head-c f-w-500">{{rateItem.rate_per_item}} per
+            item</span></div>
+        <div class="font-12"><span>Unit: {{!!rateItem.unit?rateItem.unit :0}}</span></div>
+      </div>
+      <div class="flex align-c justify-space-between mar-t-10 pad-t-5 font-12 border-t border-c">
+        <div><span class="sub-c" *ngIf="!!body?.tax_type"> Bf Tax:
+            {{!!rateItem?.bf_tax?rateItem?.bf_tax:0}} / Af Tax: {{!!rateItem?.af_tax?rateItem?.af_tax:0}}</span>
+        </div>
+        <div><span class="sub-c"> Total</span><span class="font-14" style="color: green;">
+            {{!!rateItem?.total?rateItem?.total:0}} </span></div>
+      </div>
+    </div>
+  </div>
+  <div class="flex align-c justify-r head-c f-w-500 font-16 pad-10"> Grand Total:
+    {{body?.total}}</div>
+
+  <div class="pad-10">
+    <button mat-raised-button color="primary" (click)="addItemMobile()">Add Item +</button>
+  </div>
+
+</ng-template>
+
+<div class="flex algin-c pad-10 justify-r border-c border-t">
+  <button mat-stroked-button class="mar-r-10" (click)="closeEmitter.emit(false);">Close</button>
+  <button mat-raised-button color="primary" (click)="create()">{{!!inputInfo?.id?'Update':'Create'}}</button>
+
+</div>
+
+<ng-template #searchItems>
+  <app-create-master [type]="'item'" [operation]="'create'" [inputInfo]="createObj" (closeEvent)="dialogRef.close()">
+  </app-create-master>
+</ng-template>
+
+
+<ng-template #searchCustomersItems>
+  <app-create-master [type]="'customer'" [operation]="'create'" [inputInfo]="createObj"
+    (closeEvent)="dialogRef.close()"></app-create-master>
+</ng-template>

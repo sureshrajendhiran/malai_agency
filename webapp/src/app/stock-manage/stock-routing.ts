@@ -1,12 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { MasterMainComponent } from './master-main/master-main.component';
-
+import { StockManageComponent } from './stock-manage/stock-manage.component';
 const routes: Routes = [
-
   {
-    path: ':type',
-    component: MasterMainComponent
+    path: '',
+    component: StockManageComponent
   },
 ];
 
@@ -14,4 +12,5 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class MasterModuleRoutingModule { }
+export class StockModuleRoutingModule { }
+

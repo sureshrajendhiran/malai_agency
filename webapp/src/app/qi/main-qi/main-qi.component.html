@@ -1,4 +1,4 @@
-<div class="overflow-h pos-r ">
+<div class="overflow-h pos-r">
   <div class="pos-a width-100" *ngIf="isLoading">
     <mat-progress-bar mode="indeterminate"></mat-progress-bar>
   </div>
@@ -8,10 +8,15 @@
   <div class="desk-view">
     <ng-template *ngTemplateOutlet="deskTopView"></ng-template>
   </div>
+  <div class="mb-view pos-a" style="bottom: 40px;right: 30px;">
+    <button mat-icon-button [matMenuTriggerFor]="createMenuFab" style="background-color: var(--color-primary);">
+      <mat-icon class="white">add</mat-icon>
+    </button>
+  </div>
 </div>
 
 <ng-template #mobileView>
-  <div class="pad-5-10 flex align-c justify-space-between">
+  <div class="pad-5-10 flex align-c justify-space-between pos-r">
     <div class="flex align-c">
       <div class="mar-r-10 overflow-e f-w-500">{{!!getObj.filter && getObj.filter?.name?getObj.filter?.name:'All'}}
         {{!!getObj.filter && !!getObj.filter.count?(' ('+getObj.filter.count+')'):''}}
@@ -28,12 +33,16 @@
       </button>
     </div>
   </div>
+  <app-loader *ngIf="isLoadingPreview || isLoading"></app-loader>
   <div style="height: calc(100vh - 160px);" class="overflow-a pos-r">
     <div *ngFor="let item of dataList" class="pad-5">
       <ng-container *ngTemplateOutlet="cardInfoItemTemplate;context:{itemInfo:item}"></ng-container>
     </div>
-    <div class="pad-10 flex align-c justify-c ">
-      <button mat-stroked-button color="primary" (click)="getData(getObj.page+1);">Load More</button>
+    <div class="pad-10 flex align-c justify-c " *ngIf="!!dataList.length">
+      <button mat-stroked-button color="primary" (click)="getData(getObj.page+1);">
+        <span *ngIf="!isLoading">Load More</span>
+        <mat-spinner *ngIf="!!isLoading" [strokeWidth]="2" [diameter]="20"></mat-spinner>
+      </button>
     </div>
   </div>
 </ng-template>
@@ -63,7 +72,15 @@
               Filter
             </button>
           </div>
-          <button mat-flat-button color="primary" class="">Create</button>
+          <div>
+            <button mat-flat-button color="primary" class="add-btn"
+              (click)="taxable=0;selectedItem=null;createDialog(createTemplate)">Create
+              {{getObj.type | titlecase}}</button>
+            <button mat-flat-button color="primary" class="arrow-btn" [matMenuTriggerFor]="createMenu">
+              <mat-icon>arrow_drop_down</mat-icon>
+            </button>
+
+          </div>
         </div>
       </div>
       <div class="grid grid-gap-10" style="grid-template-columns: 500px calc(100% - 510px);">
@@ -74,8 +91,9 @@
         </div>
         <div class="pos-r pad-10 overflow-h" style="padding-left: 0px !important;">
           <div style="height: calc(100vh - 185px); border-radius: 4px;" class="overflow-a pos-r preview-border">
-            <div class="head-c flex align-c justify-c height-100 width-100">No Preview</div>
-            <div [innerHTML]="previewData"></div>
+            <app-loader *ngIf="isLoadingPreview"></app-loader>
+            <div class="head-c flex align-c justify-c height-100 width-100" *ngIf="!previewData">No Preview</div>
+            <ng-container *ngTemplateOutlet="previewTemplate"></ng-container>
           </div>
         </div>
       </div>
@@ -127,11 +145,14 @@
 </ng-template>
 
 <ng-template #cardInfoItemTemplate let-itemInfo="itemInfo">
-  <div class="bg-white border-c border border-r-4 grid pos-r overflow-h"
-    style="min-height: 100px;min-height: 100px; grid-template-columns: 120px calc(100% - 120px);">
+  <div
+    class=" {{selectedItem && selectedItem?.id && selectedItem?.id==itemInfo?.id ?'selected-item':'bg-white '}} border-c border border-r-4 grid pos-r overflow-h"
+    style="min-height: 100px;min-height: 100px; grid-template-columns: 120px calc(100% - 120px);"
+    (click)="selectedItem=itemInfo">
     <div class="corner-ribbon" *ngIf="!!itemInfo?.tax_type">TAX</div>
     <div class="border-right border-c">
-      <div class="pad-10 head-c f-w-500 pointer ">{{itemInfo?.ref_number}}</div>
+      <div class="pad-10 head-c f-w-500 pointer " (click)="handleOperation('preview',createTemplate)">
+        {{itemInfo?.ref_number}}</div>
       <div class="align-c font-12 flex justify-c pad-5-10 {{itemInfo?.status | lowercase}} status white">
         {{itemInfo?.status}}
       </div>
@@ -146,13 +167,67 @@
             {{!!itemInfo?.customer_address?itemInfo?.customer_address:'No customer address'}}</div>
         </div>
         <div class="flex align-c justify-r">
-          <button class="icon-btn-basic">
+          <button class="icon-btn-basic" [matMenuTriggerFor]="menuOption">
             <span class="material-symbols-outlined ">more_vert</span>
           </button>
         </div>
       </div>
-      <div class="pad-10 border-c border-t flex algin-c justify-r head-c"> Total: <span class="f-w-500 mar-l-10"
-          style="color: green;">{{itemInfo?.total}}</span></div>
+      <div class="pad-10 border-c border-t flex algin-c justify-r head-c"> <span class="sub-c font-10">Total :</span>
+        <span class="f-w-500 mar-l-10" style="color: green;">{{itemInfo?.total}}</span></div>
     </div>
   </div>
 </ng-template>
+
+
+<ng-template #createTemplate>
+  <div class="height-100 overflow-h ">
+    <app-create-qi (closeEmitter)="close($event)" [taxable]="taxable" [type]="this.getObj.type"
+      [inputInfo]="selectedItem"></app-create-qi>
+  </div>
+</ng-template>
+
+
+<ng-template #previewTemplate>
+  <div [innerHTML]="previewData | safeHtml" class="bg-white box-s1 pad-10 " *ngIf="!!previewData"></div>
+</ng-template>
+
+
+<mat-menu #menuOption="matMenu">
+  <div class="desk-view">
+    <button mat-menu-item (click)="handleOperation('edit',createTemplate)">Edit</button>
+  </div>
+  <div class="mb-view">
+    <button mat-menu-item (click)="handleOperation('edit_mobile',createTemplate)">Edit</button>
+  </div>
+  <button mat-menu-item (click)="handleOperation('download',createTemplate)">Download</button>
+  <div class="desk-view">
+    <button mat-menu-item (click)="handleOperation('preview',createTemplate)">Preview</button>
+  </div>
+  <div class="mb-view">
+    <button mat-menu-item (click)="handleOperation('preview_mobile',previewTemplate)">Preview</button>
+  </div>
+  <button mat-menu-item [matMenuTriggerFor]="menuStatus"> Change Status
+  </button>
+  <mat-menu #menuStatus="matMenu">
+    <button mat-menu-item (click)="handleOperation('approved','')" *ngIf="type!='invoice'">Approve</button>
+    <button mat-menu-item (click)="handleOperation('paid',createTemplate)" *ngIf="type=='invoice'">Paid</button>
+    <button mat-menu-item (click)="handleOperation('sent and pending',createTemplate)" *ngIf="type=='invoice'">Sent and
+      Pending</button>
+    <button mat-menu-item (click)="handleOperation('sent',createTemplate)">Sent</button>
+    <button mat-menu-item (click)="handleOperation('pending',createTemplate)">Pending</button>
+    <button mat-menu-item (click)="handleOperation('cancelled','')">Cancel</button>
+  </mat-menu>
+  <button mat-menu-item (click)="handleOperation('delete',createTemplate)">Delete</button>
+</mat-menu>
+
+
+<mat-menu #createMenu="matMenu">
+  <button mat-menu-item (click)="taxable=0;selectedItem=null;createDialog(createTemplate)">Non-Taxable</button>
+  <button mat-menu-item (click)="taxable=1;selectedItem=null;createDialog(createTemplate)">Taxable</button>
+</mat-menu>
+
+
+<mat-menu #createMenuFab="matMenu">
+  <button mat-menu-item (click)="taxable=0;openBottomSheet(createTemplate)">Non-Taxable</button>
+  <button mat-menu-item (click)="taxable=1;openBottomSheet(createTemplate)">Taxable</button>
+</mat-menu>

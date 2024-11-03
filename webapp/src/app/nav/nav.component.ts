@@ -13,6 +13,7 @@ export class NavComponent {
     { dname: 'Quotation', route: 'qi/quotation', icon: 'format_quote' },
     { dname: 'Invoice', route: 'qi/invoice', icon: 'monetization_on' },
     { dname: 'Master', route: 'master/master', icon: 'inventory_2' },
+    { dname: 'Stocks', route: 'stock', icon: 'inventory' },
   ]
   userInfo: any;
 

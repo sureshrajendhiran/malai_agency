@@ -6,6 +6,7 @@ import { QIRoutingModule } from './qi-routing';
 import { MaterialModule } from './../material-module';
 import { SharedModule } from '../shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MasterModuleModule } from '../master-module/master-module.module';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MaterialModule,
     SharedModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MasterModuleModule
   ]
 })
 export class QiModule { }

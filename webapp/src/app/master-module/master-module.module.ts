@@ -10,12 +10,15 @@ import { CreateMasterComponent } from './create-master/create-master.component';
 @NgModule({
   declarations: [
     MasterMainComponent,
-    CreateMasterComponent
+    CreateMasterComponent,
   ],
   imports: [
     CommonModule,
     MasterModuleRoutingModule,
     MaterialModule
+  ],
+  exports: [
+    CreateMasterComponent
   ]
 })
 export class MasterModuleModule { }

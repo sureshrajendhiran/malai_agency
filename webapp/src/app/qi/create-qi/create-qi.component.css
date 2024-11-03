@@ -1,0 +1,27 @@
+.tmp-th {
+  border: 1px solid #d9e7f7;
+  min-width: 30px;
+  max-width: max-content;
+  white-space: pre;
+  padding: 10px;
+  min-height: 30px !important;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.c-flex {
+  display: flex;
+}
+
+@media (max-width: 600px) {
+  .c-flex {
+    display: block !important;
+  }
+}
+
+input {
+  background: transparent !important;
+}

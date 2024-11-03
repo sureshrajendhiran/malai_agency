@@ -37,3 +37,17 @@
   font-size: 7px;
   position: absolute;
 }
+
+
+.add-btn {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.arrow-btn {
+  min-width: 16px;
+  padding: 0 4px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-left: 1px solid #dee4eaa8 !important;
+}

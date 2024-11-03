@@ -5,8 +5,8 @@
 
 .mob-nav-g {
   display: grid;
-  grid-template-columns: calc(25% - 4px) calc(25% - 4px) calc(25% - 4px) calc(25% - 4px);
-  grid-gap: 5px;
+  grid-template-columns:20% 20% 20% 20% 20%;
+  /* grid-gap: 5px; */
 }
 
 .mb-nav-btn {

@@ -1,0 +1,21 @@
+<div class="grid grid-gap-10 st-grid overflow-h" style="">
+  <div class="height-100 border-c border-right">
+    <div class="pad-20 bg-white">
+      <div class="input-c">
+        <input placeholder="Search Item" class="pad-16" (keydown.enter)="onEnter($event)">
+      </div>
+      <button mat-flat-button color="primary" class="width-100 mar-t-10">Search</button>
+    </div>
+    <div class="overflow-a st-height">
+      <ng-container *ngTemplateOutlet="modelListItemTemplate"></ng-container>
+    </div>
+  </div>
+
+  <div class="desk-view"></div>
+</div>
+
+
+
+<ng-template #modelListItemTemplate>
+  <div *ngFor="let item of dataList" class="mar-5 bg-white border border-c border-r-4" style="min-height: 100px;"></div>
+</ng-template>

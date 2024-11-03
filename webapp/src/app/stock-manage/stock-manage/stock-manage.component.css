@@ -1,0 +1,17 @@
+.st-height {
+  height: calc(100vh - 196px);
+}
+
+
+
+.st-grid{
+    grid-template-columns: 500px calc(100% - 510px);
+}
+@media (max-width:600px) {
+  .st-height {
+    height: calc(100vh - 246px);
+  }
+  .st-grid{
+    grid-template-columns:100%;
+  }
+}
