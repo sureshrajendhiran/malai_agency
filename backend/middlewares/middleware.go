@@ -1,9 +1,9 @@
 package middlewares
 
 import (
-	"back_end_servers/services/auth"
 	"encoding/json"
 	"log"
+	"malai_agency/backend/services/auth"
 	"net/http"
 	"strings"
 )

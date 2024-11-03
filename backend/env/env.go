@@ -14,6 +14,9 @@ var AdminManagementPort = "7500"
 // Port end
 var AdminManagementURL = "/api/v1/"
 
+var SysEmail = ""
+var SysEmailPassword = ""
+
 // FileDirectory variable
 var FileDirectory = "/mnt/disks/static_files/uploads/"
 

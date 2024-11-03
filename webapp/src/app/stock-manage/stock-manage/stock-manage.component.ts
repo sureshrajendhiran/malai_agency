@@ -8,7 +8,7 @@ import { Component } from '@angular/core';
 export class StockManageComponent {
 
 
-  dataList=<any>[1,2,3,4,5,1,2,3,4,5,1,2,3,4,5];
+  dataList = <any>[1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5];
 
   onEnter(event: Event): void {
     const inputValue = (event.target as HTMLInputElement).value;
