@@ -81,7 +81,7 @@ export class MainQiComponent {
     }
     this.getObj.filter = this.filter[0];
     this.getStaticCount();
-    this.getData(0);
+    this.getData(0, false);
   }
   getStaticCount() {
     this.commonApiService.getFilterCount(this.getObj.type, this.getObj.static_type).subscribe(res => {
@@ -128,22 +128,29 @@ export class MainQiComponent {
     if (!!item) {
       this.getObj.filter = item;
       this.getObj.page = 0;
-      this.getData(0);
+      this.getData(0, false);
     }
   }
-  getData(page: number) {
+  getData(page: number, flag: boolean) {
     this.isLoading = true;
     this.getObj.page = page;
     this.commonApiService.getDataQI(this.getObj).subscribe(res => {
       if (res.statusCode == 200) {
-        this.dataList = res.info;
+        if (flag) {
+          res.info.forEach((i: any) => {
+            this.dataList.push(i);
+          });
+        } else {
+          this.dataList = [];
+          this.dataList = res.info;
+        }
         this.totalCount = res.count;
         this.isLoading = false;
       }
     })
   }
   changeType() {
-    this.getData(0);
+    this.getData(0, false);
     this.getStaticCount();
   }
   handleOption(itemInfo: any, optionType: string) {
@@ -153,8 +160,11 @@ export class MainQiComponent {
 
   createDialog(templateName: any) {
     this.dialogRef = this.dialog.open(templateName, {
-      width: '80%',
-      height: '95%'
+      width: '98vw',
+      minWidth: '98vw',
+      maxWidth: '98vw',
+      height: '95%',
+      disableClose: true
     });
   }
   handleOperation(action: any, templateName: any) {

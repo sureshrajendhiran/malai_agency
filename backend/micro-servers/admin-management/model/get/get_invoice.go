@@ -20,7 +20,7 @@ func GetInvoice(requestObj map[string]interface{}) ([]interface{}, int, error) {
 	var err error
 	sql := ""
 	if requestObj["type"].(string) == "invoice" {
-		sql = "SELECT JSON_OBJECT('id',`id`,'date',`date`,'ref_number',`ref_number`,'status',`status`," +
+		sql = "SELECT JSON_OBJECT('id',`id`,'date',`date`,'ref_number',`ref_number`,'status',`status`,'tax_type',`tax_type`," +
 			"'customer_name',`customer_name`,'customer_address',`customer_address`," +
 			"'total',`total`," +
 			"'item_list',(SELECT JSON_ARRAYAGG(JSON_OBJECT(" +
@@ -28,7 +28,7 @@ func GetInvoice(requestObj map[string]interface{}) ([]interface{}, int, error) {
 			")) from `S_Invoice_Items` where `922_id`=si.`id`)" +
 			") FROM `S_Invoice` si "
 	} else {
-		sql = "SELECT JSON_OBJECT('id',`id`,'date',`date`,'ref_number',`ref_number`,'status',`status`," +
+		sql = "SELECT JSON_OBJECT('id',`id`,'date',`date`,'ref_number',`ref_number`,'status',`status`,'tax_type',`tax_type`," +
 			"'customer_name',`customer_name`,'customer_address',`customer_address`," +
 			"'total',`total`," +
 			"'item_list',(SELECT JSON_ARRAYAGG(JSON_OBJECT(" +
@@ -36,7 +36,16 @@ func GetInvoice(requestObj map[string]interface{}) ([]interface{}, int, error) {
 			")) from `S_Quotation_Items` where `926_id`=sq.`id`)" +
 			") FROM `S_Quotation` sq "
 	}
+	sql = sql + " WHERE `id` IS NOT NULL "
 	sql = sql + filterParse(requestObj)
+
+	if requestObj["static_type"] != nil && fmt.Sprint(requestObj["static_type"]) == "all" {
+		if fmt.Sprint(requestObj["static_type"]) == "tax" {
+			sql = sql + " AND `tax_type`=1"
+		} else if fmt.Sprint(requestObj["static_type"]) == "" {
+			sql = sql + " AND `tax_type`=0"
+		}
+	}
 	res, err = query.SqlJsonToArray(sql)
 	for _, i := range res {
 		obj := i.(map[string]interface{})
@@ -57,7 +66,7 @@ func filterParse(requestObj map[string]interface{}) string {
 	if requestObj["filter"] != nil {
 		filter := requestObj["filter"].(map[string]interface{})
 		name := strings.ToLower(fmt.Sprint(filter["name"]))
-		str = " WHERE "
+		str = " AND "
 		if name == "cancelled" {
 			str = str + " `status` IN ('cancelled') "
 		} else if name == "all" {
@@ -76,6 +85,7 @@ func filterParse(requestObj map[string]interface{}) string {
 			str = str + " `status` IN ('approved') "
 		}
 	}
+
 	str = str + sort(requestObj)
 	str = str + Limit(requestObj)
 	return str

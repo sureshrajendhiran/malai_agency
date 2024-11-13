@@ -39,7 +39,7 @@
       <ng-container *ngTemplateOutlet="cardInfoItemTemplate;context:{itemInfo:item}"></ng-container>
     </div>
     <div class="pad-10 flex align-c justify-c " *ngIf="!!dataList.length">
-      <button mat-stroked-button color="primary" (click)="getData(getObj.page+1);">
+      <button mat-stroked-button color="primary" (click)="getData(getObj.page+1,true);">
         <span *ngIf="!isLoading">Load More</span>
         <mat-spinner *ngIf="!!isLoading" [strokeWidth]="2" [diameter]="20"></mat-spinner>
       </button>
@@ -90,7 +90,8 @@
           </div>
         </div>
         <div class="pos-r pad-10 overflow-h" style="padding-left: 0px !important;">
-          <div style="height: calc(100vh - 185px); border-radius: 4px;" class="overflow-a pos-r preview-border">
+          <div style="height: calc(100vh - 185px); border-radius: 4px;"
+            class="overflow-a pos-r preview-border {{previewData?'bg-white':''}}">
             <app-loader *ngIf="isLoadingPreview"></app-loader>
             <div class="head-c flex align-c justify-c height-100 width-100" *ngIf="!previewData">No Preview</div>
             <ng-container *ngTemplateOutlet="previewTemplate"></ng-container>
@@ -98,7 +99,7 @@
         </div>
       </div>
       <app-pagination [inputObject]="{dataList:dataList,totalCount:totalCount}" [isLoading]="isLoading"
-        [getObj]="getObj" (pageChangeEmitter)="getData(getObj.page)"></app-pagination>
+        [getObj]="getObj" (pageChangeEmitter)="getData(getObj.page,false)"></app-pagination>
     </div>
   </div>
 

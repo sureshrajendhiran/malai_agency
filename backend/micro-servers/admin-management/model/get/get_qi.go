@@ -17,7 +17,7 @@ func getData(requestObj map[string]interface{}) (map[string]interface{}, error) 
 	var err error
 	sql := ""
 	if requestObj["type"].(string) == "invoice" {
-		sql = "SELECT JSON_OBJECT('id',`id`,'date',`date`,'ref_number',`ref_number`,'status',`status`," +
+		sql = "SELECT JSON_OBJECT('id',`id`,'date',`date`,'ref_number',`ref_number`,'status',`status`,'tax_type',`tax_type`," +
 			"'customer_name',`customer_name`,'customer_address',`customer_address`," +
 			"'total',`total`," +
 			"'item_list',(SELECT JSON_ARRAYAGG(JSON_OBJECT(" +
@@ -25,7 +25,7 @@ func getData(requestObj map[string]interface{}) (map[string]interface{}, error) 
 			")) FROM `S_Invoice_Items` WHERE `922_id`=si.`id`)" +
 			") FROM `S_Invoice` si WHERE si.`id`='" + fmt.Sprint(requestObj["id"]) + "'"
 	} else {
-		sql = "SELECT JSON_OBJECT('id',`id`,'date',`date`,'ref_number',`ref_number`,'status',`status`," +
+		sql = "SELECT JSON_OBJECT('id',`id`,'date',`date`,'ref_number',`ref_number`,'status',`status`,'tax_type',`tax_type`," +
 			"'customer_name',`customer_name`,'customer_address',`customer_address`," +
 			"'total',`total`," +
 			"'item_list',(SELECT JSON_ARRAYAGG(JSON_OBJECT(" +

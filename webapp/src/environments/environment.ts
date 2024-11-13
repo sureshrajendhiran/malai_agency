@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  baseUrl: 'https://api.malaiagency.in/api/v1/',
+  // baseUrl: 'https://api.malaiagency.in/api/v1/',
+  baseUrl: 'http://localhost:7500/api/v1/',
 
 };
 

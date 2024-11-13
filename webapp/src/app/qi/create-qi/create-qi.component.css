@@ -13,7 +13,8 @@ table {
 }
 
 .c-flex {
-  display: flex;
+  display: grid;
+  grid-template-columns: 350px calc(100% - 360px);
 }
 
 @media (max-width: 600px) {

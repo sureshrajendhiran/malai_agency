@@ -4,7 +4,7 @@
     <div class="mar-lr-10">{{!!inputInfo?.id && !!inputInfo?.ref_number?inputInfo?.ref_number:''}}</div>
   </div>
   <div>
-    <button mat-icon-button (click)="closeEmitter.emit(false);">
+    <button class="icon-btn-basic" (click)="closeEmitter.emit(false);">
       <mat-icon>close</mat-icon>
     </button>
   </div>
@@ -12,23 +12,31 @@
 
 <div class="pad-10 overflow-a" style="height: calc(100% - 120px);">
 
-  <div class="flex align-c justify-r pad-10">
-    <div class="mar-r-10 head-c">Date : </div>
-    <div class="input-c pos-r">
-      <input [matDatepicker]="picker" class="pad-10" (focus)="picker.open()" [(ngModel)]="body.date_t">
-      <div class="pos-a" style="right:10px;top:10px">
-        <mat-icon class="sub-c icon-18 pointer" (click)="picker.open()">calendar_today</mat-icon>
+  <div class="c-flex  align-c justify-space-between pad-lr-10">
+    <div class="flex align-c pad-tb-10">
+      <div class="mar-r-10 head-c">Date : </div>
+      <div class="input-c pos-r">
+        <input [matDatepicker]="picker" class="pad-10" style="min-width: 250px;" (focus)="picker.open()"
+          [(ngModel)]="body.date_t">
+        <div class="pos-a" style="right:10px;top:10px">
+          <mat-icon class="sub-c icon-18 pointer" (click)="picker.open()">calendar_today</mat-icon>
+        </div>
+        <mat-datepicker #picker></mat-datepicker>
       </div>
-      <mat-datepicker #picker></mat-datepicker>
+    </div>
+    <div class="pad-tb-10">
+      <mat-slide-toggle class="example-margin" [checked]="body.terms_type" [(ngModel)]="body.terms_type">
+        Condition o next page
+      </mat-slide-toggle>
     </div>
   </div>
 
-  <div class="pad-10">
-    <div class="c-flex justify-space-between align-c ">
+  <div class="pad-10 overflow-a">
+    <div class="c-flex align-c grid-gap-10">
       <div class="">
         <div class="mar-r-10 mar-t-10 head-c">Customer Name : </div>
         <div class="input-c mar-t-5 pos-r">
-          <input class="pad-10 width-100" style="min-width:200px" [(ngModel)]="body.customer_name"
+          <input class="pad-10 width-100" style="min-width:350px" [(ngModel)]="body.customer_name"
             (input)="searchCustomerName($event.target)" (focus)="searchCustomerName('')"
             [matAutocomplete]="autoCustomer">
           <mat-autocomplete #autoCustomer="matAutocomplete" (optionSelected)="selectCusotmerInfo($event.option.value)">
@@ -47,7 +55,6 @@
           </div>
         </div>
       </div>
-      <div class="desk-view mar-l-5"></div>
       <div>
         <div class="mar-r-10 mar-t-10 head-c">Customer Address : </div>
         <div class="input-c mar-t-5">
@@ -55,12 +62,11 @@
         </div>
       </div>
 
-
-      <div>
-        <div class="mar-r-10 mar-t-10 head-c">Terms & conditions on next page</div>
-        <div class="input-c mar-t-5">
-          <input class="pad-10 width-100" type="number" style="min-width:300px" [(ngModel)]="body.terms_type">
-        </div>
+    </div>
+    <div style="display: table-cell;">
+      <div class="mar-r-10 mar-t-10 head-c">GST No : </div>
+      <div class="input-c mar-t-5">
+        <input class="pad-10 " style="min-width:350px" [(ngModel)]="body.customer_gst">
       </div>
     </div>
   </div>
@@ -74,6 +80,13 @@
           <th class="tmp-th head-c font-12" style="width: 100px;">HSN Code</th>
           <th class="tmp-th head-c font-12" style="width: 10px;">Unit/Quantity</th>
           <th class="tmp-th head-c font-12" style="width: 104px;">Rate per Item</th>
+
+          <!-- TAX content -->
+          <th class="tmp-th head-c font-12" *ngIf="body.tax_type" style="width: 104px;">Tax(%)</th>
+          <th class="tmp-th head-c font-12" *ngIf="body.tax_type" style="width: 104px;">BF.Tax</th>
+          <th class="tmp-th head-c font-12" *ngIf="body.tax_type" style="width: 104px;">AF.Tax</th>
+          <!-- TAX content -->
+
           <th class="tmp-th head-c font-12" style="width:130px">Amount</th>
           <th class="tmp-th" style="width:20px"></th>
         </tr>
@@ -111,13 +124,24 @@
             <input class="pad-10 text-a-r" type="number" min="0" [(ngModel)]="item.rate_per_item"
               (input)="calculateTotal(item)">
           </td>
-          <td class="tmp-th head-c font-14 text-a-r ">
-            {{!!item.unit && !!item.rate_per_item?(item.unit * item.rate_per_item):0}}
+          <td class="tmp-th head-c font-12" *ngIf="!!body.tax_type">
+            <input class="pad-10 text-a-r" type="number" min="0" [(ngModel)]="item.tax_percent"
+              (input)="calculateTotal(item)">
+          </td>
+          <td class="tmp-th head-c font-14 text-a-r" *ngIf="!!body.tax_type">
+            {{!!item.bf_tax?item.bf_tax:0}}
+          </td>
+          <td class="tmp-th head-c font-14 text-a-r" *ngIf="!!body.tax_type">
+            {{!!item.af_tax?item.af_tax:0}}
+          </td>
+          <td class="tmp-th head-c font-14 text-a-r">
+            <!-- {{!!item.unit && !!item.rate_per_item?(item.unit * item.rate_per_item):0}} -->
+            {{!!item.total?item.total:0}}
           </td>
           <td class="tmp-th ">
-            <div class="flex align-c justify-c">
-              <img src="../../../assets/img/trash.svg" class="icon-18 pointer" (click)="deleteItem(indexAS)">
-            </div>
+            <button class="icon-btn-basic" (click)="deleteItem(indexAS)">
+              <img src="../../../assets/img/trash.svg" class="icon-18 pointer">
+            </button>
           </td>
         </tr>
       </table>

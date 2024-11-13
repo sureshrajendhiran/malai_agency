@@ -18,17 +18,19 @@ export class CreateQiComponent implements OnInit {
     date_t: new Date(),
     customer_name: '',
     customer_address: '',
+    customer_gst: null,
     item_list: <any>[
     ],
     total: 0,
     terms_type: 0,
-    terms_and_conditions: null
+    terms_and_conditions: null,
+    tax_type: 0,
   };
   createObj: any;
   selectedIndex = -1;
   itemList = <any>[];
   customerList = <any>[];
-  itemObj = { item_name: '', unit: 0, rate_per_item: 0, hsn_code: '', total: 0 }
+  itemObj = { item_name: '', unit: 1, rate_per_item: 0, hsn_code: '', total: 0, tax_percent: 18, bf_tax: 0, af_tax: 0 }
   constructor(public dialog: MatDialog, private commonApiService: CommonApiService) { }
 
   ngOnInit(): void {
@@ -38,6 +40,7 @@ export class CreateQiComponent implements OnInit {
     } else {
       this.body["tax_type"] = !!this.taxable ? 1 : 0;
     }
+    this.body["type"] = this.type;
   }
 
   addItem(template: any) {
@@ -48,18 +51,31 @@ export class CreateQiComponent implements OnInit {
   calculateTotal(item: any) {
     if (!!item) {
       if (!!item.unit && !!item.rate_per_item) {
-        item.total = item.unit * item.rate_per_item;
+        if (!!this.body.tax_type) {
+          if (!!item.tax_percent) {
+            item.bf_tax = item.unit * item.rate_per_item;
+            item.af_tax = item.bf_tax + ((item.bf_tax * item.tax_percent) / 100);
+            item.total = item.af_tax;
+          } else {
+            item.total = item.unit * item.rate_per_item;
+            item.bf_tax = item.total;
+            item.af_tax = 0;
+          }
+        } else {
+          item.total = item.unit * item.rate_per_item;
+        }
       } else {
-        item.total = 0
+        item.total = 0;
       }
     }
     this.body.total = 0;
     this.body.item_list.forEach((i: any) => {
-      if (!!i.unit && !!i.rate_per_item) {
-        this.body.total = this.body.total + (i.unit * i.rate_per_item);
+      if (!!item.total) {
+        this.body.total = this.body.total + item.total;
       }
     });
   }
+
   searchDialog(template: any, type: any) {
     this.dialogRef = this.dialog.open(template, {
       width: '350px',
@@ -112,6 +128,7 @@ export class CreateQiComponent implements OnInit {
       }
     })
   }
+  
   selectCusotmerInfo(item: any) {
     this.body.customer_name = item.customer_name;
     this.body.customer_address = item.address;
@@ -131,24 +148,7 @@ export class CreateQiComponent implements OnInit {
     this.body.item_list[this.selectedIndex].total = item.rate_per_item * item.unit;
     this.calculateTotal('');
   }
-  create() {
-    this.body['type'] = this.type;
-    this.body["operation"] = !!this.inputInfo && !!this.inputInfo.id ? 'update' : 'create';
-    this.body['date'] = moment(this.body.date_t).format('YYYY-MM-DD HH:mm:ss');
-    if (!!this.inputInfo && !!this.inputInfo.id) {
-      this.body['id'] = this.inputInfo.id
-    }
-    this.body.total = 0;
-    this.body.item_list.forEach((i: any) => {
-      if (!!i.unit && !!i.rate_per_item) {
-        i.total = (i.unit * i.rate_per_item);
-        this.body.total = this.body.total + (i.unit * i.rate_per_item);
-      }
-    });
-    this.commonApiService.UpdateQI(this.body).subscribe(res => {
-      this.closeEmitter.emit(true);
-    })
-  }
+
 
 
 
@@ -175,4 +175,47 @@ export class CreateQiComponent implements OnInit {
 
   }
 
+  create() {
+    this.body['type'] = this.type;
+    this.body["operation"] = !!this.inputInfo && !!this.inputInfo.id ? 'update' : 'create';
+    this.body['date'] = moment(this.body.date_t).format('YYYY-MM-DD HH:mm:ss');
+    if (!!this.inputInfo && !!this.inputInfo.id) {
+      this.body['id'] = this.inputInfo.id
+    }
+    this.body.total = 0;
+    this.calculateSubmit();
+    this.commonApiService.UpdateQI(this.body).subscribe(res => {
+      this.closeEmitter.emit(true);
+    })
+  }
+
+  calculateSubmit() {
+    this.body.item_list.forEach((item: any) => {
+      if (!!item.unit && !!item.rate_per_item) {
+        if (!!this.body.tax_type) {
+          if (!!item.tax_percent) {
+            item.bf_tax = item.unit * item.rate_per_item;
+            item.af_tax = item.bf_tax + ((item.bf_tax * item.tax_percent) / 100);
+            item.total = item.af_tax;
+          } else {
+            item.total = item.unit * item.rate_per_item;
+            item.bf_tax = item.total;
+            item.af_tax = 0;
+          }
+        } else {
+          item.total = item.unit * item.rate_per_item;
+        }
+      } else {
+        item.total = 0
+      }
+    });
+    this.body.total = 0;
+    this.body.item_list.forEach((i: any) => {
+      if (!!i.total) {
+        this.body.total = this.body.total + (i.total);
+      }
+    });
+  }
+
 }
+
